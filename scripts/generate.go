@@ -104,6 +104,7 @@ func generateDepartments() []Department {
 		{DeptNo: "d005", DeptName: "Sales"},
 	}
 }
+
 func generateDeptManagers(employees []Employee) []DeptManager {
 	var managers []DeptManager
 	for _, emp := range employees {
@@ -203,7 +204,7 @@ func main() {
 	fmt.Println("Departments inserted successfully")
 
 	// Generate random employees and insert into employees table
-	employees := generateRandomEmployees(100000)
+	employees := generateRandomEmployees(1000000)
 	insertInBatches(db, employees, 1000, "employees")
 	fmt.Println("Employees inserted successfully")
 

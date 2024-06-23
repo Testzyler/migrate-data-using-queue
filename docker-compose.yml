@@ -86,7 +86,7 @@ services:
       - archive-db
     deploy:
       mode: replicated
-      replicas: 2
+      replicas: 5
     networks:
       - emp-processing-network
 
