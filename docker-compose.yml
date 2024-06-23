@@ -1,0 +1,64 @@
+version: '3.8'
+
+services:
+  primary-db:
+    image: postgres:latest
+    container_name: mq-primary-db
+    environment:
+      POSTGRES_USER: primary_user
+      POSTGRES_PASSWORD: primary_password
+      POSTGRES_DB: employees
+      POSTGRES_SCHEMA: employees
+    ports:
+      - "5430:5432"
+    volumes:
+      - type: bind
+        source: ./scripts/init.sql
+        target: /docker-entrypoint-initdb.d/init.sql
+        read_only: true
+    networks:
+      - emp-processing-network
+
+  archive-db:
+    image: postgres:latest
+    container_name: mq-archive-db
+    environment:
+      POSTGRES_USER: archive_user
+      POSTGRES_PASSWORD: archive_password
+      POSTGRES_DB: employees
+      POSTGRES_SCHEMA: employees
+    ports:
+      - "5431:5432"
+    volumes:
+      - type: bind
+        source: ./scripts/init.sql
+        target: /docker-entrypoint-initdb.d/init.sql
+        read_only: true
+    networks:
+      - emp-processing-network
+  
+  redis:
+    image: redis:latest
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    networks:
+      - emp-processing-network
+
+  asynqmon:
+    image: hibiken/asynqmon:latest
+    environment:
+      - REDIS_ADDR=redis:6379
+    ports:
+      - "8080:8080"
+    depends_on:
+      - redis
+    networks:
+      - emp-processing-network
+
+networks:
+  emp-processing-network:
+
+volumes:
+  redis-data:

@@ -1,0 +1,12 @@
+Server:
+  Port: 9000
+Database:
+  Host: "localhost"
+  Port: "5430"
+  Name: "employees"
+  Schema: "employees"
+  Username: "primary_user"
+  Password: "primary_password"
+Criteria:
+  CaseLimit: 40 # Limit of cases is optional you can remove this line
+  TimeBefore: 18-06-2024 #  dd-mm-yyyy case.created_time <= {Purge.TimeBefore}
