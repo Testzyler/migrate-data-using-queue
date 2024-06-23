@@ -1,8 +1,8 @@
 Server:
   Port: 9000
 Database:
-  Host: "localhost"
-  Port: "5430"
+  Host: "primary-db"
+  Port: "5432"
   Name: "employees"
   Schema: "employees"
   Username: "primary_user"

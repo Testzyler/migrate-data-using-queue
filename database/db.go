@@ -9,6 +9,10 @@ import (
 	"gorm.io/gorm"
 )
 
+type Database struct {
+	DB *gorm.DB
+}
+
 func ConnectDB() (*gorm.DB, error) {
 	host := env.GetEnv("Database.Host")
 	port := env.GetEnv("Database.Port")
@@ -30,4 +34,21 @@ func ConnectDB() (*gorm.DB, error) {
 
 	log.Printf("Connected to database [%s] on %s:%s\n", dbname, host, port)
 	return db, nil
+}
+
+func (d *Database) Migrate() {
+	d.DB.AutoMigrate()
+}
+
+// Get DB instance
+func (d *Database) GetDB() *gorm.DB {
+	return d.DB
+}
+
+func (d *Database) Close() {
+	sqlDB, err := d.DB.DB()
+	if err != nil {
+		log.Fatal(err)
+	}
+	sqlDB.Close()
 }

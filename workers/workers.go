@@ -9,7 +9,7 @@ import (
 	"github.com/hibiken/asynq"
 )
 
-const redisAddr = "localhost:6379"
+const redisAddr = "redis:6379"
 
 func Run() {
 	ctx := context.Background()

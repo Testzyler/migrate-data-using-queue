@@ -1,4 +1,3 @@
-version: '3.8'
 
 services:
   primary-db:
@@ -54,6 +53,40 @@ services:
       - "8080:8080"
     depends_on:
       - redis
+    networks:
+      - emp-processing-network
+  
+  serve-api:
+    build: .
+    image: go-server:latest
+    container_name: go_server
+    command: ["/app/main", "server"]
+    restart: unless-stopped
+    volumes:
+      - ./config.yaml:/app/config.yaml:ro
+    depends_on:
+      - redis
+      - primary-db
+      - archive-db
+    ports:
+      - "3000:3000"
+    networks:
+      - emp-processing-network
+
+  worker:
+    build: .
+    image: go-worker:latest
+    command: ["/app/main", "worker"]
+    restart: unless-stopped
+    volumes:
+      - ./config.yaml:/app/config.yaml:ro
+    depends_on:
+      - redis
+      - primary-db
+      - archive-db
+    deploy:
+      mode: replicated
+      replicas: 2
     networks:
       - emp-processing-network
 

@@ -185,3 +185,27 @@ func (migrator *EmployeeMigrator) HandleRemoveEmployeeTask(ctx context.Context, 
 
 	return nil
 }
+
+func (migrator *EmployeeMigrator) NewRemoveAllEmployeeTasks() ([]*asynq.Task, error) {
+	var tasks []*asynq.Task
+	db := migrator.DB
+	// Get all employees
+	var empIDs []string
+	err := db.Raw("SELECT emp_no FROM employees.employees").Scan(&empIDs).Error
+	if err != nil {
+		return nil, err
+	}
+
+	for _, empID := range empIDs {
+		payload := EmployeeTaskPayload{
+			EmpID: empID,
+		}
+		payloadBytes, err := json.Marshal(payload)
+		if err != nil {
+			return nil, err
+		}
+		task := asynq.NewTask(TypeRemoveEmployee, payloadBytes)
+		tasks = append(tasks, task)
+	}
+	return tasks, nil
+}

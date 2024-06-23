@@ -11,4 +11,5 @@ func Setup(app *fiber.App) {
 	// Register routes
 	app.Post("/migrate/employee", hr.GetEmployeeToMigrate)
 	app.Post("/remove/employee", hr.RemoveEmployee)
+	app.Get("/purge/employees", hr.RemoveAllEmployee)
 }

@@ -16,12 +16,16 @@ type EmployeeTaskPayload struct {
 
 // server api
 func Run() {
-	redisAddress := "localhost:6379"
-	app := fiber.New()
-	routes.Setup(app)
+	// Initialize the server.
+	redisAddress := "redis:6379"
 
 	// Initialize the queue client.
 	task.Init(redisAddress)
+
+	// Initialize the server.
+	app := fiber.New()
+	routes.Setup(app)
+
 	// defer task.Close()
 	log.Fatal(app.Listen(":3000"))
 }
